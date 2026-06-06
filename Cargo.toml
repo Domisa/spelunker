@@ -4,3 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+rand = "=0.10.1"
+rayon = "1.12.0"
+rand_distr = "0.6.0"
+serde = {version = "1.0.228", features = ["derive"]}
+plotters = "0.3.7"
+clap = {version = "4.6.1" , features = ["derive"]}
+toml = "1.1.2"
+
+[dev-dependencies]
+criterion = "0.8.2"
