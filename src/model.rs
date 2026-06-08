@@ -16,5 +16,4 @@ pub struct ServiceList {
 pub fn load_config (path: &str) -> Result<ServiceList, Box<dyn Error>>{
     let contents = std::fs::read_to_string(path)?;
     let config: ServiceList = toml::from_str(&contents)?;
-    todo!();
-}
+    Ok(config)
