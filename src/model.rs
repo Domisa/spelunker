@@ -1,4 +1,5 @@
-use std::error:Error;
+use std::error::Error;
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct ServiceTarget {
@@ -17,7 +18,11 @@ pub fn load_config (path: &str) -> Result<ServiceList, Box<dyn Error>>{
     let contents = std::fs::read_to_string(path)?;
     let config: ServiceList = toml::from_str(&contents)?;
     Ok(config)
-
+}
 pub fn build_dag (services: &ServiceList) -> std::collections::HashMap<String, Vec<String>> {
-    todo!();
+    let mut dag = std::collections::HashMap::new();
+    for service in &services.service_list {
+        dag.insert(service.service_name.clone(), service.service_topography.clone());
+    }
+    dag
 }
