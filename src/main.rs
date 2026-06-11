@@ -16,6 +16,6 @@ struct Args {
 }
 
 fn main() {
-    
+    Args::parse();
     println!("Hello, world!");
 }
