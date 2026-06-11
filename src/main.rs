@@ -1,9 +1,10 @@
-use model::load_config;
-use clap::Parser;
-
 mod stats;
 mod model;
 mod simulation;
+
+use model::load_config;
+use clap::Parser;
+
 
 #[derive(Parser)]
 struct Args {
@@ -16,6 +17,6 @@ struct Args {
 }
 
 fn main() {
-    Args::parse();
+    let args = Args::parse();
     println!("Hello, world!");
 }
