@@ -14,6 +14,11 @@ pub struct ServiceList {
     //pub num_trails: u32,
 }
 
+pub struct TrialResult{
+    pub latency: f64,
+    pub failure: bool,
+}
+
 pub fn load_config (path: &str) -> Result<ServiceList, Box<dyn Error>>{
     let contents = std::fs::read_to_string(path)?;
     let config: ServiceList = toml::from_str(&contents)?;
