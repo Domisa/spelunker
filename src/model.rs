@@ -14,6 +14,7 @@ pub struct ServiceList {
     //pub num_trails: u32,
 }
 
+#[derive(Clone)]
 pub struct TrialResult{
     pub latency: f64,
     pub failure: bool,
