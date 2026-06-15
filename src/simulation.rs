@@ -22,3 +22,9 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
     todo!();
 }
 
+fn sample_failure(failure_rate: f64) -> bool {
+    let n = rand::random::<f64>();
+
+    n < failure_rate
+}
+
