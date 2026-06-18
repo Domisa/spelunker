@@ -1,16 +1,20 @@
 use std::error::Error;
 use serde::Deserialize;
 
+//TODO: ServiceTarget is will soon be too large. Alter for better reading.
 #[derive(Deserialize)]
 pub struct ServiceTarget {
     pub service_name: String,
     pub failure_rate: f64,
     pub service_topography: Vec<String>,
+    pub median_latency: f64,
+    pub std_dev: f64,
 }
 
 #[derive(Deserialize)]
 pub struct ServiceList {
     pub service_list: Vec<ServiceTarget>,
+    pub entry_point: String,
     //pub num_trails: u32,
 }
 
