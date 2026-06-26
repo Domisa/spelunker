@@ -35,6 +35,7 @@ pub fn load_config (path: &str) -> Result<ServiceList, Box<dyn Error>>{
     let config: ServiceList = toml::from_str(&contents)?;
     Ok(config)
 }
+
 pub fn build_dag (services: &ServiceList) -> std::collections::HashMap<String, Vec<String>> {
     let mut dag = std::collections::HashMap::new();
     for service in &services.service_list {
@@ -43,8 +44,8 @@ pub fn build_dag (services: &ServiceList) -> std::collections::HashMap<String, V
     dag
 }
 
-pub build_service_lookup(services: &ServiceList) -> {
-    let mut lookup = Hashmap::new();
+pub fn build_service_lookup (services: &ServiceList) -> std::collections::HashMap<String, &ServiceTarget> {
+    let mut lookup = std::collections::HashMap::new();
     for service in &services.service_list {
         lookup.insert(service.service_name.clone(), service);
     }
