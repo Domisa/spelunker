@@ -8,7 +8,13 @@ pub struct ServiceTarget {
     pub failure_rate: f64,
     pub service_topography: Vec<String>,
     pub median_latency: f64,
+
+    #[serde(default = "default_std_dev")]
     pub std_dev: f64,
+}
+
+fn default_std_dev() -> f64 {
+    0.5
 }
 
 #[derive(Deserialize)]
@@ -35,4 +41,13 @@ pub fn build_dag (services: &ServiceList) -> std::collections::HashMap<String, V
         dag.insert(service.service_name.clone(), service.service_topography.clone());
     }
     dag
+}
+
+pub build_service_lookup(services: &ServiceList) -> {
+    let mut lookup = Hashmap::new();
+    for service in &services.service_list {
+        lookup.insert(service.service_name.clone(), service);
+    }
+    lookup
+
 }
