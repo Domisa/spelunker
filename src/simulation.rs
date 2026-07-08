@@ -4,6 +4,23 @@ use crate::model::{TrialResult, ServiceList};
 use std::collections::HashMap;
 use rand_distr::{LogNormal, Distribution};
 
+
+fn sample_failure(failure_rate: f64) -> bool {
+    let n = rand::random::<f64>();
+
+    n < failure_rate
+}
+
+
+fn sample_latency(median_latency: f64, std_dev: f64) -> f64 {
+
+    //replace unwrap for better error handling later
+    let mu = median_latency.ln();
+    let dist = LogNormal::new(mu, std_dev).unwrap();
+    let latency = dist.sample(&mut rand::rng());
+    latency
+}
+
 // consider adding services: &ServiceList, but I think I would rather refactor ServiceTarget.
 fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut HashMap<String, TrialResult>) -> TrialResult {
     
@@ -24,20 +41,9 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
     todo!();
 }
 
-fn sample_failure(failure_rate: f64) -> bool {
-    let n = rand::random::<f64>();
 
-    n < failure_rate
-}
 
-fn sample_latency(median_latency: f64, std_dev: f64) -> f64 {
 
-    //replace unwrap for better error handling later
-    let mu = median_latency.ln();
-    let dist = LogNormal::new(mu, std_dev).unwrap();
-    let latency = dist.sample(&mut rand::rng());
-    latency
-}
 
 fn trial_run(dag: &HashMap<String, Vec<String>>, services: &ServiceList) -> TrialResult {
     
