@@ -1,6 +1,6 @@
 // This is where the Monte Carlo calculation happens
 use rayon;
-use crate::model::{TrialResult, ServiceList};
+use crate::model::{TrialResult, ServiceList, ServiceTarget, build_service_lookup};
 use std::collections::HashMap;
 use rand_distr::{LogNormal, Distribution};
 
@@ -21,8 +21,7 @@ fn sample_latency(median_latency: f64, std_dev: f64) -> f64 {
     latency
 }
 
-// consider adding services: &ServiceList, but I think I would rather refactor ServiceTarget.
-fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut HashMap<String, TrialResult>) -> TrialResult {
+fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut HashMap<String, TrialResult>, lookup: &HashMap<String, &ServiceTarget>) -> TrialResult {
     
     if let Some(cached) = visited.get(service) {
         return cached.clone();
@@ -30,7 +29,7 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
     
     if let Some(dependency) = dag.get(service) {
         for dep in dependency {
-             let dep_result = walk_dag(dag, dep, visited);
+             let dep_result = walk_dag(dag, dep, visited, lookup);
              if dep_result.failure {
                 return TrialResult {failure: true, latency: 0.0};
              }
@@ -38,7 +37,15 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
        
     }
 
-    todo!();
+    if let Some(target) = lookup.get(service) {
+        let failure = sample_failure(target.failure_rate);
+        let latency = sample_latency(target.median_latency, target.std_dev);
+        let result = TrialResult { failure, latency };
+        visited.insert(service.to_string(), result.clone());
+        result
+    } else {
+        TrialResult { failure: true, latency: 0.0 }
+    }
 }
 
 
@@ -48,7 +55,8 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
 fn trial_run(dag: &HashMap<String, Vec<String>>, services: &ServiceList) -> TrialResult {
     
     let mut visited = HashMap::new();
-    walk_dag(dag, &services.entry_point, &mut visited);
-    todo!();
+    let lookup = build_service_lookup(services);
+    let result = walk_dag(dag, &services.entry_point, &mut visited, &lookup);
+    result
     
 }
