@@ -1,5 +1,5 @@
 // This is where the Monte Carlo calculation happens
-use rayon;
+use rayon::prelude::*;
 use crate::model::{TrialResult, ServiceList, ServiceTarget, build_service_lookup};
 use std::collections::HashMap;
 use rand_distr::{LogNormal, Distribution};
@@ -50,8 +50,6 @@ fn walk_dag(dag: &HashMap<String, Vec<String>>, service: &str, visited: &mut Has
 
 
 
-
-
 fn trial_run(dag: &HashMap<String, Vec<String>>, services: &ServiceList) -> TrialResult {
     
     let mut visited = HashMap::new();
@@ -59,4 +57,13 @@ fn trial_run(dag: &HashMap<String, Vec<String>>, services: &ServiceList) -> Tria
     let result = walk_dag(dag, &services.entry_point, &mut visited, &lookup);
     result
     
+}
+
+fn parallel_num_trials(dag: &HashMap<String, Vec<String>>, services: &ServiceList, num_trials: u32) -> Vec<TrialResult> {
+    let all_trial_results = (0..num_trials)
+    .into_par_iter()
+    .map(|_| trial_run(dag, services))
+    .collect();
+    all_trial_results
+
 }
