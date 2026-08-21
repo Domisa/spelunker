@@ -18,3 +18,8 @@ fn failure_rate(results: &Vec<TrialResult>) -> f64 {
     }
     fail_count as f64/results.len() as f64
 }
+
+fn availability(results: &Vec<TrialResult>) -> f64 {
+    1.0 - failure_rate(results)
+}
+
