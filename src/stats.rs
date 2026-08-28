@@ -23,3 +23,9 @@ fn availability(results: &Vec<TrialResult>) -> f64 {
     1.0 - failure_rate(results)
 }
 
+fn latency_percentiles(results: &Vec<TrialResult>) -> (f64, f64, f64) {
+    let mut sorted: Vec<f64> = results.iter().map(|r| r.latency).collect();
+    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let len = sorted.len();
+    (sorted[len * 50/100], sorted[len *95/100], sorted[len * 99/100])
+}
