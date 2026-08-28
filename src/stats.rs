@@ -1,5 +1,7 @@
 use crate::model::TrialResult;
+use serde::Serialize;
 
+#[derive(Serialize)]
 pub struct Data {
     pub failure_rate: f64,
     pub availability: f64,
@@ -36,3 +38,6 @@ fn data_form(results: &Vec<TrialResult>) -> Data {
     Data {failure_rate, availability, p50: latency_percentiles.0, p95: latency_percentiles.1, p99: latency_percentiles.2}
 }
 
+pub fn to_json(data: &Data) -> Result<String, serde_json::Error> {
+    serde_json::to_string(data)
+}
