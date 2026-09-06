@@ -59,7 +59,7 @@ fn trial_run(dag: &HashMap<String, Vec<String>>, services: &ServiceList) -> Tria
     
 }
 
-fn parallel_num_trials(dag: &HashMap<String, Vec<String>>, services: &ServiceList, num_trials: u32) -> Vec<TrialResult> {
+pub fn parallel_num_trials(dag: &HashMap<String, Vec<String>>, services: &ServiceList, num_trials: u32) -> Vec<TrialResult> {
     let all_trial_results = (0..num_trials)
     .into_par_iter()
     .map(|_| trial_run(dag, services))
