@@ -31,7 +31,7 @@ fn latency_percentiles(results: &Vec<TrialResult>) -> (f64, f64, f64) {
     (sorted[len * 50/100], sorted[len * 95/100], sorted[len * 99/100])
 }
 
-fn data_form(results: &Vec<TrialResult>) -> Data {
+pub fn data_form(results: &Vec<TrialResult>) -> Data {
     let failure_rate: f64 = failure_rate(results);
     let availability: f64 = availability(results);
     let latency_percentiles: (f64, f64, f64) = latency_percentiles(results);
