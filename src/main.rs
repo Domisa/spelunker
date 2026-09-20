@@ -8,6 +8,7 @@ use model::{build_dag, build_service_lookup};
 use simulation::parallel_num_trials;
 use stats::{data_form, to_json};
 
+// This struct is used to parse command line arguments using the clap crate.
 #[derive(Parser)]
 struct Args {
 
@@ -19,14 +20,19 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    
+    // Parse command line arguments
     let args = Args::parse();
     let services = load_config(&args.config)?;
 
+    // Build the directed acyclic graph (DAG) and service lookup from the loaded services
     let dag = build_dag(&services);
     let service_lookup = build_service_lookup(&services);
 
+    // Run the simulation in parallel to get the number of trials
     let num_trails = parallel_num_trials(&dag, &services, args.iterations);
     
+    // Format the data and convert it to JSON to display the results
     let data = data_form(&num_trails);
 
     let jsoned_data = to_json(&data);
