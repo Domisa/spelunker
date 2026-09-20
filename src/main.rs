@@ -4,7 +4,7 @@ mod simulation;
 
 use model::load_config;
 use clap::Parser;
-use model::{build_dag, build_service_lookup};
+use model::{build_dag};
 use simulation::parallel_num_trials;
 use stats::{data_form, to_json};
 
@@ -27,7 +27,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Build the directed acyclic graph (DAG) and service lookup from the loaded services
     let dag = build_dag(&services);
-    let service_lookup = build_service_lookup(&services);
 
     // Run the simulation in parallel to get the number of trials
     let num_trails = parallel_num_trials(&dag, &services, args.iterations);
