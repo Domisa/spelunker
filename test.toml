@@ -1,7 +1,19 @@
-entry_point = "auth"
+entry_point = "service_a"
 
 [[service_list]]
-service_name = "auth"
+service_name = "service_a"
 failure_rate = 0.01
-service_topography = []
+service_topography = ["service_b", "service_c"]
 median_latency = 50.0
+
+[[service_list]]
+service_name = "service_b"
+failure_rate = 0.05
+service_topography = ["service_c"]
+median_latency = 100.0
+
+[[service_list]]
+service_name = "service_c"
+failure_rate = 0.03
+service_topography = []
+median_latency = 10.0
