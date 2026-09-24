@@ -46,3 +46,43 @@ pub fn data_form(results: &Vec<TrialResult>) -> Data {
 pub fn to_json(data: &Data) -> Result<String, serde_json::Error> {
     serde_json::to_string(data)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_failure_rate() {
+        let results = vec![
+            TrialResult { latency: 1.0, failure: false },
+            TrialResult { latency: 2.0, failure: true },
+            TrialResult { latency: 3.0, failure: false },
+        ];
+        assert!((failure_rate(&results) - 1.0 / 3.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_availability() {
+        let results = vec![
+            TrialResult { latency: 1.0, failure: false },
+            TrialResult { latency: 2.0, failure: true },
+            TrialResult { latency: 3.0, failure: false },
+        ];
+        assert!((availability(&results) - 2.0 / 3.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn test_latency_percentiles() {
+        let results = vec![
+            TrialResult { latency: 1.0, failure: false },
+            TrialResult { latency: 2.0, failure: true },
+            TrialResult { latency: 3.0, failure: false },
+            TrialResult { latency: 4.0, failure: false },
+            TrialResult { latency: 5.0, failure: true },
+        ];
+        let percentiles = latency_percentiles(&results);
+        assert!((percentiles.0 - 3.0).abs() < 1e-6);
+        assert!((percentiles.1 - 5.0).abs() < 1e-6);
+        assert!((percentiles.2 - 5.0).abs() < 1e-6);
+    }
+}
