@@ -58,3 +58,31 @@ pub fn build_service_lookup (services: &ServiceList) -> std::collections::HashMa
     lookup
 
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_config() {
+        let config = load_config("test.toml").unwrap();
+        assert_eq!(config.service_list.len(), 3);
+        assert_eq!(config.entry_point, "service_a");
+    }
+
+    #[test]
+    fn test_build_dag() {
+        let config = load_config("test.toml").unwrap();
+        let dag = build_dag(&config);
+        assert_eq!(dag.get("service_a").unwrap(), &vec!["service_b".to_string(), "service_c".to_string()]);
+        assert_eq!(dag.get("service_b").unwrap(), &vec!["service_c".to_string()]);
+    }
+
+    #[test]
+    fn test_build_service_lookup() {
+        let config = load_config("test.toml").unwrap();
+        let lookup = build_service_lookup(&config);
+        assert!(lookup.contains_key("service_a"));
+        assert!(lookup.contains_key("service_b"));
+    }
+}
