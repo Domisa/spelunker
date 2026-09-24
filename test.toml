@@ -1,0 +1,7 @@
+entry_point = "auth"
+
+[[service_list]]
+service_name = "auth"
+failure_rate = 0.01
+service_topography = []
+median_latency = 50.0
