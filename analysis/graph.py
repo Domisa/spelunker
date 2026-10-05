@@ -4,17 +4,19 @@
 # dependencies = [
 #    "pandas",
 #    "matplotlib",
-#    "seaborn",
+#    "seaborn"
 # ]
 # ///
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import json
 
 try:
-    df = pd.read_json("output.json")
+    with open("output.json", "r", encoding="utf-8-sig") as f:
+        data = json.load(f)
+    df = pd.DataFrame([data])
     print("Data loaded successfully.")
 
 
